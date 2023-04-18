@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="icon" type="image/png" href="docs/img/ongdb.png"/>
 <meta charset="UTF-8">
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -534,12 +535,12 @@ lossless manner (imported RDF can subsequently be exported without losing a sing
 <h2 id="Install"><a class="link" href="#Install">Installation</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can either download a prebuilt jar from the <a href="https://github.com/jbarrasa/neosemantics/releases">releases area</a> or build it from the source. If you prefer to build, check the note below.</p>
+<p>You can either download a prebuilt jar from the <a href="https://github.com/ongdb-contrib/neosemantics/releases">releases area</a> or build it from the source. If you prefer to build, check the note below.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Copy the  the jar(s) in the &lt;NEO_HOME&gt;/plugins directory of your Neo4j instance. (<strong>note:</strong> If you&#8217;re going to use the JSON-LD serialisation format for RDF, you&#8217;ll need to include also <a href="https://neo4j-contrib.github.io/neo4j-apoc-procedures/">APOC</a>)</p>
+<p>Copy the  the jar(s) in the &lt;NEO_HOME&gt;/plugins directory of your Neo4j instance. (<strong>note:</strong> If you&#8217;re going to use the JSON-LD serialisation format for RDF, you&#8217;ll need to include also <a href="https://graphfoundation.github.io/ongdb-apoc/">APOC</a>)</p>
 </li>
 <li>
 <p>Add the following line to your &lt;NEO_HOME&gt;/conf/neo4j.conf (notice that it is possible to modify where the extension is mounted by using an alternative name to <code>/rdf</code> below).</p>
@@ -1270,7 +1271,7 @@ RETURN monica</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To avoid this, you can use <a href="https://neo4j-contrib.github.io/neo4j-apoc-procedures/#_nodes_collapse">APOC Nodes collapse</a>. <code>apoc.nodes.collapse</code> merges the set of nodes into a virtual node.</p>
+<p>To avoid this, you can use <a href="https://graphfoundation.github.io/ongdb-apoc/#_nodes_collapse">APOC Nodes collapse</a>. <code>apoc.nodes.collapse</code> merges the set of nodes into a virtual node.</p>
 </div>
 <div class="paragraph">
 <p>Here is the cypher snippet showing how to do that with the <code>exDoc:Monica</code> example:</p>
@@ -1300,7 +1301,7 @@ RETURN DISTINCT from AS monica</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can find more information about the parameter configuration of <code>apoc.nodes.collapse</code> on <a href="https://neo4j-contrib.github.io/neo4j-apoc-procedures/#_nodes_collapse">APOC Nodes collapse</a>.</p>
+<p>You can find more information about the parameter configuration of <code>apoc.nodes.collapse</code> on <a href="https://graphfoundation.github.io/ongdb-apoc/#_nodes_collapse">APOC Nodes collapse</a>.</p>
 </div>
 </div>
 </div>
@@ -1329,7 +1330,7 @@ The following two parameters will help in these situations:
 </div>
 </div>
 <div class="paragraph">
-<p>Notice that the Bristish Library service requires you to encode the SPARQL query. We do this with <a href="https://neo4j-contrib.github.io/neo4j-apoc-procedures/#_overview_text_functions">APOC&#8217;s apoc.text.urlencode function</a>. After running this you get a pretty poor graph, because the
+<p>Notice that the Bristish Library service requires you to encode the SPARQL query. We do this with <a href="https://graphfoundation.github.io/ongdb-apoc/#_overview_text_functions">APOC&#8217;s apoc.text.urlencode function</a>. After running this you get a pretty poor graph, because the
 DESCRIBE query only returns the statements having 'The world of yesterday' (<code><a href="http://bnb.data.bl.uk/id/resource/018212405" class="bare">http://bnb.data.bl.uk/id/resource/018212405</a></code>) as subject or object.
 But we can enrich it a bit by re-running it for a all of the URIs connected to our book as follows:</p>
 </div>
