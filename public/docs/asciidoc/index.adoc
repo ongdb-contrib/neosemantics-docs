@@ -1,0 +1,63 @@
+= NSMNTX User Guide 
+:imagesdir: docs/img
+:toc: left
+:experimental:
+:sectid:
+:sectlinks:
+:toclevels: 2
+
+[abstract]
+--
+This is the user guide for NSMNTX {docs-version}, authored by the Neo4j Labs Team.
+--
+
+The guide covers the following areas:
+
+* <<intro>> -- An Introduction to the NSMNTX library.
+* <<Install>> -- Instructions for installing NSMNTX.
+* <<Import>> -- A detailed guide to importing RDF data.
+* <<DeleteRDF>> -- A detailed guide to deleting RDF data.
+* <<OntoImport>> -- A detailed guide to importing ontologies.
+* <<Preview>> -- A detailed guide to previewing RDF data before we import it into Neo4j.
+* <<Export>> -- A detailed guide to generating RDF from a Neo4j graph.
+* <<Mapping>> -- A detailed guide to applying transformations to RDF as it's imported into Neo4j.
+* <<Inference>> -- A detailed guide to inferencing and reasoning.
+* <<Reference>> -- An overview of all procedures and functions in the library.
+* <<Examples>> -- A list of projects using NSMNTX.
+
+image::nsmntx-block-diagram.png[NSMNTX diagram, 200,float="right",align="center"]
+
+[[intro]]
+== Introduction
+
+NSMNTX is a plugin that enables the *use of RDF in Neo4j*. https://www.w3.org/RDF/[RDF is a W3C standard model] for data interchange.
+This effectively means that NSMNTX makes it possible to
+
+* *Store RDF data in Neo4j* in a
+lossless manner (imported RDF can subsequently be exported without losing a single triple in the process).
+* On-demand *export property graph data* from Neo4j *as RDF*.
+
+Other features in NSMNTX include *model mapping* and *inferencing* on Neo4j graphs.
+
+////
+=== Documentation Overview
+
+.Main Sections Here
+* <<Install>>
+* <<Import>>
+* <<Export>>
+* <<Mapping>>
+* <<Inference>>
+* <<Reference>>
+* <<Examples>>
+
+////
+
+include::_install.adoc[]
+include::_import.adoc[]
+include::_export.adoc[]
+include::_mapping.adoc[]
+include::_inference.adoc[]
+include::_reference.adoc[]
+include::_examples.adoc[]
+
