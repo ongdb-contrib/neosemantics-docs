@@ -1,0 +1,384 @@
+[[Reference]]
+== Neosemantics 参考指南
+
+Neosemantics 中所有可用存储过程、函数和扩展的完整列表。
+
+=== 存储过程
+
+==== RDF 导入
+
+[options="header"]
+|===
+| 存储过程名称        | 参数           | 说明和示例用法
+|semantics.importRDF
+a|
+* 数据集的 URL
+* 序列化格式 (有效格式: Turtle, N-Triples, JSON-LD, TriG, RDF/XML)
+* 可选的 Map 参数，使用下表（RDF 导入参数）中的参数
+|从URL（文件或http）获取RDF，并将其作为属性图存储在ONgDB中。此过程需要索引 :Resource(uri)
+
+|semantics.importRDFSnippet
+a|
+* 包含有效 RDF 片段的字符串
+* 序列化格式 (有效格式: Turtle, N-Triples, JSON-LD, TriG, RDF/XML)
+* 可选的 Map 参数，使用下表（RDF 导入参数）中的参数
+|导入作为参数传递的 RDF 代码段，并将其作为属性图存储在 ONgDB 中。 此过程需要索引 :Resource(uri)
+
+|semantics.importQuadRDF
+a|
+* 数据集的 URL
+* 序列化格式 (有效格式: TriG,N-Quads)
+* 可选的 Map 参数，使用下表（RDF 导入参数）中的参数
+| 导入 RDF Quads。
+
+|semantics.importOntology
+a|
+* 数据集的 URL
+* 序列化格式 (有效格式: Turtle, N-Triples, JSON-LD, TriG, RDF/XML)
+* 可选的 Map 参数，使用下表（本体导入）中的参数
+| 导入类、属性（数据类型和对象）、其层次结构以及域和范围信息。
+
+|semantics.streamRDF
+a|
+* 数据集的 URL
+* 序列化格式 (有效格式: Turtle, N-Triples, JSON-LD, TriG, RDF/XML)
+* 可选的 Map 参数，使用下表（RDF 导入参数）中的参数
+| 解析 RDF 并将每个三元组流式传输为具有 <S，P，O> 的记录，以及文本值的数据类型和语言标记。不写入数据库。当您想要以自定义方式将 RDF 数据集的 ONgDB 图片段导入到 ONgDB 图形片段中时，此 SP 非常有用。
+
+|semantics.streamRDFSnippet
+a|
+* 包含有效 RDF 片段的字符串
+* 序列化格式 (有效格式: Turtle, N-Triples, JSON-LD, TriG, RDF/XML)
+* 可选的 Map 参数，使用下表（RDF 导入参数）中的参数
+| 解析作为文本传递的 RDF 代码段，并将每个三元组流式传输为具有 <S，P，O> 的记录，以及文本值的数据类型和语言标记。不写入数据库。另请参阅 `streamRDF`。
+
+|semantics.previewRDF
+a|
+* 数据集的 URL
+* 序列化格式 (有效格式: Turtle, N-Triples, JSON-LD, TriG, RDF/XML)
+* 可选的 Map 参数，使用下表（RDF 导入参数）中的参数
+| 解析 RDF 并生成虚拟节点和关系，以便在 ONgDB 浏览器中预览。不写入数据库。请注意，这对于 SMALL 数据集的初步可视化分析已足够。考虑你想在浏览器中呈现多少个节点。
+
+|semantics.previewRDFSnippet
+a|
+* 包含有效 RDF 片段的字符串
+* 序列化格式 (有效格式: Turtle, N-Triples, JSON-LD, TriG, RDF/XML)
+* 可选的 Map 参数，使用下表（RDF 导入参数）中的参数
+| 解析作为参数传递的 RDF 片段（不从 url 检索），并生成虚拟节点和关系，以便在 ONgDB 浏览器中预览。不写入数据库。
+
+|semantics.deleteRDF
+a|
+* 数据集的 URL
+* 序列化格式 (有效格式: Turtle, N-Triples, JSON-LD, TriG, RDF/XML)
+* 可选的 Map 参数，使用下表（RDF 导入参数）中的参数
+| 从 ONgDB 中删除三元组。在图上工作的结果是通过semantics.importRDF（）导入RDF。删除配置必须与导入时使用的配置匹配。
+
+|semantics.deleteRDFSnippet
+a|
+* 包含有效 RDF 片段的字符串
+* 序列化格式 (有效格式: Turtle, N-Triples, JSON-LD, TriG, RDF/XML)
+* 可选的 Map 参数，使用下表（RDF 导入参数）中的参数
+| 从 ONgDB 中删除作为第一个参数传递的三元组。以相同的方式工作，并采用与 `deleteRDF` 相同的参数。
+
+|semantics.deleteQuadRDF
+a|
+ * 数据集的 URL
+ * 序列化格式 (有效格式: TriG,N-Quads)
+ * 可选的 Map 参数，使用下表（RDF 导入参数）中的参数
+| 从 ONgDB 中删除 Quads。在通过semantics.importQuadRDF（）导入RDF四边形的结果图上工作。删除配置必须与导入时使用的配置匹配。
+
+|===
+
+===== RDF 导入参数
+
+
+[options="header"]
+|===
+| 参数        | 值(默认值)           | 说明
+| handleVocabUris      | 'SHORTEN','IGNORE','MAP','KEEP' ('SHORTEN')
+a| * `SHORTEN`, 使用属性名称、关系名称和标签的前缀缩短完整的 URI。
+* `IGNORE` URI 将被忽略，仅保留本地名称。
+* `MAP` 导入时应用词汇元素映射。
+* `KEEP` uris保持不变。
+
+| applyNeo4jNaming | boolean (false)| 设置为 true 并与 `handleVocabUris: IGNORE` 使用, ONgDB
+大写应用于词汇元素（关系类型的大写字母，标签的大写优先等）
+
+| handleMultival | 'OVERWRITE', 'ARRAY' ('OVERWRITE')
+a| * `OVERWRITE` 属性值保持单值。导入的RDF中的多个值被覆盖（仅保留最后一个值）
+* `ARRAY` 属性存储在一个数组中，可以存储多个值。所有这些，除非设置了 `multivalPropList`。
+
+| multivalPropList | list of strings ([])| 要存储为数组的属性名称（完整 uri）列表。其余的被视为 `OVERWRITE`。
+
+| keepLangTag | boolean (false) | 设置为 true 时，语言标记将与属性值一起保留。适用于多语言数据集。
+使用帮助程序函数 `getLangValue` 获取特定值。
+
+| predicateExclusionList | list of strings ([]) | 解析 RDF 时要忽略且不存储在 ONgDB 中的谓词（完整 uri）列表。
+
+| typesToLabels      | boolean (true) | 设置为 true 时，RDF：type 语句将作为节点标签导入 ONgDB 中。
+
+| languageFilter      | ['en','fr','es',...] | 设置后，仅导入具有此语言标记的文本属性（或未标记的属性）。
+
+| headerParams      | map {} | 要在 HTTP GET 请求中传递的参数，如果是 POST 请求，则为 `payload`。 <br> 示例: `{ authorization: 'Basic user:pwd', Accept: 'application/rdf+xml'}`
+
+| commitSize      | integer (25000) | 每 N 个三元组提交一次事务。
+
+| nodeCacheSize      | integer (10000) | 将 N 个节点保留在缓存中以最大程度地减少从数据库读取的数据。
+
+| verifyUriSyntax | boolean (true) | 默认情况下，将检查 URI 语法。可以通过将此参数设置为 `false` 来禁用。
+
+| keepCustomDataTypes | boolean(false) | 设置为 true 时，包含自定义数据类型的所有属性都将另存为字符串，后跟其自定义数据类型IRIs。
+
+| customDataTypedPropList| list of strings ([]) | 设置后，仅导入此列表中文本属性的自定义数据类型。
+
+|===
+
+
+===== 本体导入参数
+
+
+[options="header"]
+|===
+| 参数        | 值(默认值)           | 说明
+| predicateExclusionList | list of strings ([]) | 解析 RDF 时要忽略且不存储在 ONgDB 中的谓词（完整 uri）列表。
+
+| headerParams      | map {} | 要在 HTTP GET 请求中传递的参数，如果是 POST 请求，则为 `payload`。 <br> 示例: `{ authorization: 'Basic user:pwd', Accept: 'application/rdf+xml'}`
+
+| commitSize      | integer (25000) | 每 N 个三元组提交一次事务。
+
+| nodeCacheSize      | integer (10000) | 将 N 个节点保留在缓存中以最大程度地减少从数据库读取的数据。
+
+| verifyUriSyntax | boolean (true) | 默认情况下，将检查 URI 语法。可以通过将此参数设置为 `false` 来禁用。
+
+| classLabelName      | string ('Class') |  本体中类的标签。
+
+| subClassOfRelName      | string ('SCO') |  `rdfs：subClassOf` 语句的关系名称。
+
+| dataTypePropertyLabelName      | string ('Property') |  数据类型属性定义（属性）的标签。
+
+| objectPropertyLabelName      | string ('Relationship') |  对象属性定义（关系）的标签。
+
+| subPropertyOfRelName      | string ('SPO') | `rdfs：subPropertyOf` 语句的关系。
+
+| domainRelName      | string ('DOMAIN') |  类和数据类型属性/对象属性之间的域关系。
+
+| rangeRelName      | string ('RANGE') |  类和数据类型属性/对象属性之间的范围关系。
+
+|===
+
+
+==== RDF 导入实用工具
+
+[options="header"]
+|===
+| 存储过程        | 参数           | 说明和示例用法
+|semantics.addNamespacePrefix
+a|
+* prefix: 字符串 (例如 `owl`)
+* namespace: URI 的命名空间部分 (例如 `http://www.w3.org/2002/07/owl#`)
+| 添加命名空间 - 前缀对定义，用于RDF导入/导出。
+
+|semantics.listNamespacePrefixes | - | 列出所有当前定义的命名空间前缀定义。
+
+|semantics.addNamespacePrefixesFromText | String | [实验] 从文本中提取命名空间前缀定义
+作为输入（SPARQL，RDF/XML，Turtle）传递并添加每个命名空间前缀对，以便它可以用于RDF导入/导出。
+
+|===
+
+
+==== 模型映射
+
+[options="header"]
+|===
+| 存储过程名称        | 参数           | 说明和示例用法
+| semantics.mapping.addSchema
+a| * schema/vocabulary/ontology 的 URL
+* 序列化中使用的前缀 | 创建对词汇表的引用。需要定义映射。
+
+| semantics.mapping.dropSchema
+a|
+* schema/vocabulary/ontology 的 URL | 删除词汇引用和所有关联的映射。
+
+| semantics.mapping.listSchemas
+a| * optional filter string |  返回所有词汇引用。设置筛选器字符串时，仅返回在其 uri 或关联前缀中包含搜索字符串的schema。
+
+| semantics.mapping.addCommonSchemas      | no prams | 创建对许多流行词汇表的引用，包括 schema.org, Dublin Core, SKOS, OWL, etc
+
+| semantics.mapping.addMappingToSchema
+a| * schema/voc/ontology 的 URL
+* ONgDB 图中元素的名称（属性名称、标签或关系类型）
+* 公共架构中的匹配元素（类、数据类型属性或对象属性）。仅元素的本地名称 |
+为 ONgDB 数据库 schema 中的元素创建到词汇元素的映射。
+
+| semantics.mapping.dropMapping      |
+* 映射的数据库元素名称以删除映射 |
+返回指示删除成功/失败的输出文本消息。
+
+| semantics.mapping.listMappings
+a|
+* optional filter string
+| 返回包含所有当前定义的映射的列表。无论传递筛选器字符串，仅传递包含字符串的映射
+返回数据库元素名称或schema元素 URI。
+
+|===
+
+==== 推理
+
+[options="header"]
+|===
+| 存储过程名称        | 参数           | 说明
+|semantics.inference.nodesLabelled
+a|
+* 标签名称
+* 参数如下表（推理参数）所述 | 返回带有指定标签的节点或其子标签的所有节点。
+
+|semantics.inference.nodesInCategory
+a|
+* 表示类别节点。
+* 参数如下表（推理参数）所述  | 返回指定类别的节点或其子类别的所有节点。
+
+|semantics.inference.getRels
+a|
+* 开始节点
+*  (实际 或 '虚拟') 关系类型
+* 参数如下表（推理参数）所述 | 返回类型为 `virtRel` 或其子类型的所有关系以及目标节点。
+
+|semantics.inference.hasLabel *(函数)*
+a| * 节点
+* 标签名
+* 参数如下表（推理参数）所述 | 检查节点是否被显式或隐式标记为指定“标签”。
+
+|semantics.inference.inCategory *(函数)*
+a|
+* 表示实例的节点
+* 表示节点类别
+* 参数如下表（推理参数）所述 | 检查节点是显式还是隐式在类别中。
+
+|===
+
+===== 推理参数
+
+====== 参数说明：过程 semantics.inference.nodesLabelled 和 函数 semantics.inference.hasLabel
+
+[options="header"]
+|===
+| 参数        | 值(默认值)           | 说明
+| catLabel | String ('Label') | 用于描述类别的节点的标签。
+| catNameProp | String ('name') | 包含类别名称的属性名称。
+| subCatRel | String ('SLO') | 将子类别连接到其父类别的关系类型。
+|===
+
+====== 参数说明：过程 semantics.inference.nodesInCategory 和 函数 semantics.inference.inCategory
+
+[options="header"]
+|===
+| 参数        | 值(默认值)           | 说明
+| inCatRel | String ('IN_CAT') | 将实例节点连接到类别节点的关系类型。
+| subCatRel | String ('SCO') | 将子类别连接到其父类别的关系类型。
+|===
+
+====== 参数说明：过程 semantics.inference.getRels
+
+[options="header"]
+|===
+| 参数        | 值(默认值)           | 说明
+| relLabel | String ('Relationship') | 用于描述关系的节点的标签。
+| relNameProp | String ('name') | 包含关系名称的属性名称。
+| subRelRel | String ('SRO') | 将子关系与其父关系连接起来的关系类型。
+| relDir | '<','>' ('') | 关系的方向。 '>' 对于传出关系，'<' 对于传入关系，默认（空）表示双向.
+|===
+
+
+=== 实用功能函数
+
+[options="header"]
+|===
+| 函数名称        | 参数           | 说明
+| semantics.getIRILocalName      | URI string | 返回 URI 的本地部分（去除命名空间）。
+
+| semantics.getIRINamespace      | URI string | 返回 URI 的命名空间部分（去掉本地部分）。
+
+| semantics.getDataType | string (a property value) | 返回属性值的 XMLSchema（或自定义）数据类型（如果存在）。
+
+| semantics.getLangValue | string (a property value) | 返回语言标记作为第一个参数传递的值，如果没有提供的语言标记的值，则返回 null。
+
+| semantics.getLangTag | string (a property value)| 返回与属性值关联的语言标记（如果存在），如果不存在语言标记，则返回 null。
+
+| semantics.hasLangTag  a| * String (lang-tag)
+* String (a property value)| 如果值将语言标记作为第一个参数传递为 false，则返回 true。
+
+| semantics.getValue | string (a property value)| 在去除数据类型信息或语言标记（如果存在）后返回属性的数据类型的值。
+
+| semantics.shortFromUri | string (a URI)| 返回使用现有命名空间定义的 IRI 的缩短版本。
+
+| semantics.uriFromShort | string (a shortened URI)| 返回扩展的（完整）URI，给定在加载过程中使用**semantics.importRDF**创建的缩短URI。
+
+| semantics.importJSONAsTree
+a| * 要将导入的 JSON 链接到的节点
+* JSON 片段
+* (optional) 关系名称，将 JSON 的根节点链接到作为第一个参数传递的节点 | 通过将 JSON 映射到节点和关系来导入 JSON (JSON-LD style). 需要唯一性约束 :Resource(uri)
+
+|===
+
+
+
+=== 扩展（HTTP 端点）
+[options="header"]
+[cols="15,5,45,35"]
+|===
+| 接口 | 类型 | 参数 | 说明
+| /rdf/describe/id/<nodeid>
+|GET
+a|
+* nodeid: 包含节点 ID 的 path 参数
+* excludeContext: 可选命名参数。如果当前输出不包括连接的节点，则只需选择一个节点。
+* format: RDF 序列化格式。如果存在，它将覆盖标头参数 *accept*.
+| 生成所选节点的 RDF 序列化。格式将由标头中的 *accept* 参数确定。默认值为 Turtle。
+
+| /rdf/describe/uri/<nodeuri>
+|GET
+a|
+* nodeuri: 包含节点的 （urlencoded） uri 的路径参数。
+* excludeContext: （可选）如果当前输出不包括连接的节点，则只需选择一个。
+* graphuri:（可选）如果存在并且图形包含Quad信息，则仅返回所选命名图形中的语句。参数的值是命名图的（urlencoded）uri。
+* format: RDF 序列化格式。如果存在，它将覆盖标头参数 *accept*。
+| 生成所选节点的 RDF 序列化。它适用于从RDF数据集导入的模型，通过 **semantics.importRDF**, **semantics.importQuadRDF** 或者以节点标记为 ：Resource 并具有 URI 的方式构建。
+
+|/rdf/describe/find/<l>/<p>/<v>
+|GET
+a|
+* 该方法采用作为 URL 中的路径参数传递的三个参数：/<l><p>/<v>。它们分别表示标签、属性名称和属性值。
+* excludeContext: 可选命名参数。如果当前输出不包括连接的节点，则只需选择一个节点。
+* valType: 当属性值不被视为字符串时是必需的。有效值：INTEGER, FLOAT and BOOLEAN
+* format: RDF 序列化格式。如果存在，它将覆盖标头参数 *accept*。
+| 返回与标签和属性值上的筛选器匹配的节点。
+
+| /rdf/cypher
+| POST
+a| POST request taking as parameter a JSON map with the following keys:
+
+* cypher: 要运行的cypher查询
+* cypherParams: cypher查询的参数
+* showOnlyMapped: （可选，默认值为 false）如果当前输出将排除未映射的元素（请参阅如何定义标签、属性、关系的映射）
+* format: RDF 序列化格式。如果存在，它将覆盖标头参数 *accept*。
+| 生成 Cypher 查询返回的节点和关系的 RDF 序列化。
+
+| /rdf/cypheronrdf
+| POST
+a| 与 `/rdf/cypher` 相同的参数
+| 与 `/rdf/cypher` 相同，但它适用于通过**semantics.importRDF**从RDF数据集导入或内置的模型
+节点标记为 ：Resource 并具有 URI 的方式。
+
+|/rdf/onto
+| GET
+a| * format: RDF 序列化格式。如果存在，它将覆盖标头参数 *accept*。
+| 返回基于图模式的 OWL 本体。
+
+|/rdf/ontonrdf
+| GET
+a| * format: RDF 序列化格式。如果存在，它将覆盖标头参数 *accept*。
+| 与 `/rdf/onto` 相同，但它适用于通过 **semantics.importRDF** 从 RDF 数据集导入或内置的模型
+节点标记为 ：Resource 并具有 URI 的方式。
+
+|===
+
